@@ -27,19 +27,10 @@ io.on('connection', (socket) => {
         'New user joined'
     ));
 
-    socket.on('createMessage', (message) => {
-        console.log('createMessage', message);
+    socket.on('createMessage', (message, callback) => {
+        console.log('User createdMessage', message);
         io.emit('newMessage', generateMessage(message.from, message.text));
-        // io.emit('newMessage', {
-        //     from: message.from,
-        //     text: message.text,
-        //     createdAt: new Date().getTime()
-        // });
-        // socket.broadcast.emit('newMessage', {
-        //     from: message.from,
-        //     text: message.text,
-        //     createdAt: new Date().getTime()
-        // });
+        callback('Server: your data looks good to me!');
     });
 
     socket.on('disconnect', () => {
