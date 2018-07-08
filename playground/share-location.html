@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Share your location on Google Maps</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <h1>Share My Location</h1>
+        <!-- <h2>Share your location on Google Maps</h2> -->
+
+        <div id="location-button-div">
+                <p>Press the button bellow to get your current location.</p>
+                <button onclick="getLocation()" id="send-location">Get Location</button>
+            </div>
+        
+            <div id="location-div">
+                <p>Copy and share the following link with those who need to see your location.</p>
+                <input type="text" value="" id="myInput">
+            
+                <button onclick="copyText()">Copy</button>
+            
+                <iframe
+                    id="map-iframe"
+                    width="600"
+                    height="450"
+                    style="border:0"
+                    src="" allowfullscreen>
+                </iframe>
+        </div> 
+    </main>   
+
+    <script>
+        var locationButton = document.getElementById('send-location');
+        var locationButtonDiv = document.getElementById('location-button-div');
+        var locationDiv = document.getElementById('location-div');
+        var input = document.getElementById("myInput");
+        var mapIframe = document.getElementById("map-iframe");
+        var latitude, longitude;
+
+        function getLocation() {
+            if (!navigator.geolocation) {
+                return alert("Geolocation not supported by your browser.");
+            }
+
+            locationButton.innerText='Getting location...';
+            locationButton.setAttribute('disabled', 'disabled');
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+                locationDiv.style.display = 'inline';
+                locationButtonDiv.style.display = 'none';
+                locationButton.removeAttribute('disabled');
+                locationButton.innerText='Get location';
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                input.value = 'https://google.com/maps?q='+latitude+','+longitude;
+                mapIframe.src = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyAkTs7GnGlTrrl-aqvyZQd9oe_WgjsIvTk&q='+latitude+','+longitude;
+            }, function () {
+                locationButton.removeAttribute('disabled');
+                locationButton.innerText='Get location';
+                alert("Unable to fetch location");
+            });
+        }
+
+        function copyText() {
+            console.log('The input value is: ', input.value);
+            /* Select the text field */
+            input.select();
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+            /* Alert the copied text */
+            alert("Copied the text: " + input.value);
+        }
+    </script>
+</body>
+</html>
